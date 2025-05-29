@@ -35,7 +35,7 @@ app.post('/uploads',upload.single('file'), (req,res)=>{
 app.get('/files',(req,res)=>{
     fs.readdir(UPLOAD_DIR,(err,files)=>{
         if(err){
-            res.status(500).json([]);
+            return res.status(500).json([]);
         }else{
             res.json(files)
         }
