@@ -47,6 +47,14 @@ app.get('/uploads/:filename',(req,res)=>{
     res.download(filePath);
 })
 
+app.delete('/uploads/:filename',(req,res)=>{
+    const filePath = path.join(UPLOAD_DIR,req.params.filename)
+    fs.unlink(filePath,(err)=>{
+        console.log('An error occured')
+        return res.status(500).json({message: "Failed to delete"})
+    })
+    res.status(200).json({message: "Deleted successfully"})
+})
 
 app.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname,'public/index.html'))

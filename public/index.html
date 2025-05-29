@@ -40,7 +40,23 @@
                     a.textContent = file;
                     a.target = '_blank';
 
+                    const deleteButton = document.createElement('button')
+                    deleteButton.style.marginLeft = '10px'
+                    deleteButton.textContent = 'Delete',
+                    deleteButton.onclick = ()=>{
+                        fetch('/uploads' + encodeURIComponent(file),{
+                            method : 'DELETE'
+                        })
+                        .then(()=>{
+                            li.remove()
+                        })
+                        .catch((err)=>{
+                            console.log(err)
+                        })
+                    }
+
                     li.appendChild(a);
+                    li.appendChild('deleteButton')
                     fileList.appendChild(li);
                 })
             })
