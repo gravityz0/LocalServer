@@ -44,7 +44,7 @@
                     deleteButton.style.marginLeft = '10px'
                     deleteButton.textContent = 'Delete',
                     deleteButton.onclick = ()=>{
-                        fetch('/uploads' + encodeURIComponent(file),{
+                        fetch('/uploads/' + encodeURIComponent(file),{
                             method : 'DELETE'
                         })
                         .then(()=>{
