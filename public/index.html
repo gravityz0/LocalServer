@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server</title>
+</head>
+<body>
+    <h2>Upload A file</h2>
+    <form action="/uploads" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Available List</h2>
+    <ul id="fileList"></ul>
+
+    <h2>Chat</h2>
+    <ul id="messages"></ul>
+    <input type="text" id="msg" autocomplete="off">
+    <button onclick="send()">Send</button>
+
+     <script src="/socket.io/socket.io.js"></script>
+    <script>
+        function loadFiles(){
+            fetch("/files")
+            .then((response)=>{
+                if(!response.ok){
+                    console.log("An error occured")
+                }else{
+                    return response.json();
+                }
+            })
+            .then((files)=>{
+                const fileList = document.getElementById('fileList')
+                files.forEach((file)=>{
+                    const li = document.createElement('li');
+                    const a  = document.createElement('a');
+                    a.href = '/uploads/' + encodeURIComponent(file);
+                    a.textContent = file;
+                    a.target = '_blank';
+
+                    li.appendChild(a);
+                    fileList.appendChild(li);
+                })
+            })
+        }
+        loadFiles();
+
+        const socket = io();
+        const message =document.getElementById('messages');
+
+        function send(){
+            const input = document.getElementById('msg')
+
+            if(input.value.trim() !== ''){
+                socket.emit('chat message', input.value)
+                input.value = ''
+            }
+        }
+
+        socket.on('chat message',(msg) =>{
+            const li = document.createElement('li');
+            li.textContent = msg;
+            message.appendChild(li);
+            console.log("Connected to server");
+        })
+
+    </script>
+</body>
+</html>
